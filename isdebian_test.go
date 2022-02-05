@@ -21,3 +21,8 @@ func TestIsDebian(t *testing.T) {
 	v := IsDebian()
 	t.Logf("IsDebian(): %v", v)
 }
+
+func TestIsWhonix(t *testing.T) {
+	v := IsWhonix()
+	t.Logf("IsWhonix(): %v", v)
+}

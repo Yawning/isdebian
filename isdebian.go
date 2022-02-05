@@ -17,6 +17,7 @@ package isdebian // import "gitlab.com/yawning/isdebian.git"
 
 import (
 	"bytes"
+	"os"
 	"runtime"
 	"syscall"
 )
@@ -56,6 +57,30 @@ func IsDebian() bool {
 			if bytes.Contains(b, []byte("ID=debian")) {
 				return true
 			}
+		}
+	}
+
+	return false
+}
+
+// IsWhonix returns true iff the system is likely running Whonix.
+func IsWhonix() bool {
+	// Skip if the kernel isn't something Debian targets.
+	switch runtime.GOOS {
+	case "linux", "freebsd", "netbsd", "hurd":
+	default:
+		return false
+	}
+
+	// Check for the various files indicating that this may be whonix.
+	for _, fn := range []string{
+		"/usr/share/whonix/marker",
+		"/etc/whonix_version",
+		"/usr/share/anon-gw-base-files/gateway",
+		"/usr/share/anon-ws-base-files/workstation",
+	} {
+		if _, err := os.Stat(fn); err == nil {
+			return true
 		}
 	}
 
